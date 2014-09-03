@@ -10,18 +10,20 @@
  */
 public class LCS {
     private String stringOne, stringTwo, formulatedString;
-    
+    private int l1, l2;
+    private int[][] map, dirMap;
+        
     public LCS(String s1, String s2){
         this.stringOne = s1;
         this.stringTwo = s2;
     }
     
-    public String getLCS(){
+    public void getLCS(){
         
-        int l1 = this.stringOne.length();
-        int l2 = this.stringTwo.length();
-        int[][] map = new int[l1+1][l2+1];
-        int[][] dirMap = new int[l1+1][l2+1];
+        this.l1 = this.stringOne.length();
+        this.l2 = this.stringTwo.length();
+        this.map = new int[l1+1][l2+1];
+        this.dirMap = new int[l1+1][l2+1];
         
         for(int i=0; i<=l1; i++) map[i][0] = 0;
         for(int i=0; i<=l2; i++) map[0][i] = 0;
@@ -32,28 +34,34 @@ public class LCS {
             {
                 if(this.stringOne.charAt(i-1) == this.stringTwo.charAt(j-1))
                 {
-                    dirMap[i][j] = 1;
-                    map[i][j] = Math.max(map[i-1][j],  map[i][j-1]) + 1;
+                    this.dirMap[i][j] = 1;
+                    this.map[i][j] = Math.max(this.map[i-1][j],  this.map[i][j-1]) + 1;
                 }
                 else
                 {
-                    if(map[i-1][j] > map[i][j-1]){
-                        dirMap[i][j] = -1;
-                        map[i][j] = map[i-1][j];
+                    if(this.map[i-1][j] > this.map[i][j-1]){
+                        this.dirMap[i][j] = -1;
+                        this.map[i][j] = this.map[i-1][j];
                     }else{
-                        dirMap[i][j] = 0;
-                        map[i][j] = map[i][j-1];
+                        this.dirMap[i][j] = 0;
+                        this.map[i][j] = this.map[i][j-1];
                     }
                 }
             }
-        }              
-        
+        }
+    }
+    
+    public String getLCSString(){
+        getLCS();
         this.formulatedString = "";        
         backTrack(map, dirMap, l1, l2);                
         
         return this.formulatedString;
     }
     
+    public int getLCSLength(){
+        return this.map[l1][l2];
+    }
     
     private String backTrack(int[][] map, int[][] dirMap, int l1, int l2){        
         
@@ -74,7 +82,7 @@ public class LCS {
     
     public static void main(String[] args) {
         LCS lcs = new LCS("XMJYAUZ", "MZJAWXU");
-        System.out.println( lcs.getLCS() );
+        System.out.println( lcs.getLCSString()+" "+lcs.getLCSLength() );
         
     }
     
